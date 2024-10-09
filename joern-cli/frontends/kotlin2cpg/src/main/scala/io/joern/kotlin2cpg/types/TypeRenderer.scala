@@ -127,7 +127,6 @@ class TypeRenderer(val keepTypeArguments: Boolean = false) {
     val rendered =
       if (t.isInstanceOf[ErrorType]) TypeConstants.any
       else if (TypeUtilsKt.isTypeParameter(t)) TypeConstants.javaLangObject
-      else if (isFunctionXType(t)) TypeConstants.kotlinFunctionXPrefix + (t.getArguments.size() - 1).toString
       else
         Option(TypeUtils.getClassDescriptor(t))
           .map { descriptor =>
@@ -153,13 +152,6 @@ class TypeRenderer(val keepTypeArguments: Boolean = false) {
     } else {
       renderedType
     }
-  }
-
-  private def isFunctionXType(t: KotlinType): Boolean = {
-    val renderer            = descriptorRenderer()
-    val renderedConstructor = renderer.renderTypeConstructor(t.getConstructor)
-    renderedConstructor.startsWith(TypeConstants.kotlinFunctionXPrefix) ||
-    renderedConstructor.startsWith(TypeConstants.kotlinSuspendFunctionXPrefix)
   }
 
   def stripped(typeName: String): String = {
